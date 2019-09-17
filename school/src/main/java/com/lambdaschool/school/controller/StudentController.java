@@ -2,6 +2,7 @@ package com.lambdaschool.school.controller;
 
 import com.lambdaschool.school.model.Student;
 import com.lambdaschool.school.service.StudentService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,6 +30,15 @@ public class StudentController
     // adding page & size parameters
     // http:/localhost:2019/restaurants/restaurants/?sort=city,desc&sort=name
     // sort by city & name
+    @ApiOperation(value = "return all Students using Paging and Sorting", response = Student.class, responseContainer = "List")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Results page you want to retrieve(0..N)"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of records per page"),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                            value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
     @GetMapping(value = "/students", produces = {"application/json"})
     public ResponseEntity<?> listAllStudents(@PageableDefault(page = 0, size = 3) Pageable pageable) //pageable param for page and size
     {
@@ -44,6 +54,10 @@ public class StudentController
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Retrieves a student who has the given phrase in its name.", response = Student.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Student(s) Found", responseContainer = "List", response = Student.class),
+            @ApiResponse(code = 404, message = "Student Not Found", response = ErrorDetail.class)})
     @GetMapping(value = "/Student/{StudentId}",
                 produces = {"application/json"})
     public ResponseEntity<?> getStudentById(
