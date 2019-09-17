@@ -30,7 +30,7 @@ public class StudentController
     // http:/localhost:2019/restaurants/restaurants/?sort=city,desc&sort=name
     // sort by city & name
     @GetMapping(value = "/students", produces = {"application/json"})
-    public ResponseEntity<?> listAllStudents(@PageableDefault(page = 0, size = 5) Pageable pageable) //pageable param for page and size
+    public ResponseEntity<?> listAllStudents(@PageableDefault(page = 0, size = 3) Pageable pageable) //pageable param for page and size
     {
         List<Student> myStudents = studentService.findAll(pageable);
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
