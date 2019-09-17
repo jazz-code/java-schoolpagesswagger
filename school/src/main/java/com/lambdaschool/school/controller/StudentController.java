@@ -55,13 +55,14 @@ public class StudentController
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Retrieves a student who has the given phrase in its name.", response = Student.class)
+    @ApiOperation(value = "Retrieves a student with the given studentid.", response = Student.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student(s) Found", responseContainer = "List", response = Student.class),
             @ApiResponse(code = 404, message = "Student Not Found", response = ErrorDetail.class)})
     @GetMapping(value = "/Student/{StudentId}",
                 produces = {"application/json"})
     public ResponseEntity<?> getStudentById(
+            @ApiParam(value = "Student Id", required = true, example = "1")
             @PathVariable
                     Long StudentId)
     {
@@ -69,17 +70,25 @@ public class StudentController
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "Retrieves a student who has the given phrase in its name.", response = Student.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Student(s) Found", responseContainer = "List", response = Student.class),
+            @ApiResponse(code = 404, message = "Student Not Found", response = ErrorDetail.class)})
     @GetMapping(value = "/student/namelike/{name}",
                 produces = {"application/json"})
     public ResponseEntity<?> getStudentByNameContaining(
+            @ApiParam(value = "Student Name", required = false, example = "Student Name")
             @PathVariable String name)
     {
         List<Student> myStudents = studentService.findStudentByNameLike(name);
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "Creates a new Student.", notes = "The newly created student id will be sent in the location header.", response = void.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Student Created Successfully", response = void.class),
+            @ApiResponse(code = 500, message = "Error creating student", response = ErrorDetail.class)
+    } )
     @PostMapping(value = "/Student",
                  consumes = {"application/json"},
                  produces = {"application/json"})
@@ -102,6 +111,7 @@ public class StudentController
     public ResponseEntity<?> updateStudent(
             @RequestBody
                     Student updateStudent,
+            @ApiParam(value = "Student Id", required = true, example = "1")
             @PathVariable
                     long Studentid)
     {
