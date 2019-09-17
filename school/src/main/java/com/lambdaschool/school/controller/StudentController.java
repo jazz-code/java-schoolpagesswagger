@@ -36,6 +36,14 @@ public class StudentController
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
+    // endpoint for all students without paging or sorting
+    @GetMapping(value = "/allstudents",
+                produces = {"application/json"})
+    public ResponseEntity<?> reallyListAllStudents() {
+        List<Student> myStudents = studentService.findAll(Pageable.unpaged());
+        return new ResponseEntity<>(myStudents, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/Student/{StudentId}",
                 produces = {"application/json"})
     public ResponseEntity<?> getStudentById(
